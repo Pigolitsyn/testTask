@@ -1,7 +1,8 @@
 const { Telegraf } = require("telegraf");
 const axios = require("axios");
+const { botToken, backendUrl } = require("./token")
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const bot = new Telegraf(botToken);
 
 const menuKeyboard = [
     [
@@ -37,27 +38,25 @@ bot.start((ctx) => {
 
 bot.on("callback_query", (ctx) => {
     axios
-        .post(process.env.BACKEND_IP, {
+        .post(`http://${backendUrl}`, {
             userId: ctx.update.callback_query.from.id,
             username: ctx.update.callback_query.from.username,
             date: Date.now().toString(),
             order: ctx.update.callback_query.data,
         })
         .then((response) => {
-            const hash = response.data;
             bot.telegram.sendMessage(ctx.chat.id, "Ваш талон!", {
                 reply_markup: {
                     inline_keyboard: [
                         [
                             {
                                 text: "тык!",
-                                url: process.env.BACKEND_IP + hash,
+                                url: `${backendUrl}/${response.data}`,
                             },
                         ],
                     ],
                 },
-            }).then(message => console.log(message));
-            ctx.answerCbQuery();
+            })
         })
         .catch((error) => {
             console.error("error was happened " + error);

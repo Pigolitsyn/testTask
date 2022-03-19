@@ -53,6 +53,7 @@ app.get("/:order", async (req, res) => {
 })
 
 app.post("/", async (req, res) => {
+    console.log("Request")
     const concatenatedString = req.body.userId + req.body.username + req.body.date + req.body.order
     const hash = hashFunction(concatenatedString);
     await Order.create({
