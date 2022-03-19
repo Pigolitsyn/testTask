@@ -9,6 +9,8 @@ const port = 8080
 const mongoose = require("mongoose")
 const uri = "mongodb+srv://pigolitsyn:ASDFJfjfjwepoivjLKJSEPVAKWEJPAIOJ@cluster0.fit8g.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
+mongoose.connection.close()
+
 mongoose.connect(uri).then(() => {
     console.log("successful connection to mongo atlas")
 }).catch(err => console.log(err));
