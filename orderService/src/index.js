@@ -1,5 +1,9 @@
 const express = require("express")
+const hashFunction  = require("./utilities/hashFunction")
+const { Order } = require("./entities/order")
+
 const app = express()
+app.use(express.json())
 const port = 8080
 
 const mongoose = require("mongoose")
@@ -9,47 +13,21 @@ mongoose.connect(uri).then(() => {
     console.log("successful connection to mongo atlas")
 }).catch(err => console.log(err));
 
-const OrderSchema = new mongoose.Schema({
-    userId: {
-        type: String,
-    },
-    username: {
-        type: String,
-    },
-    order: {
-        type: String,
-    },
-    date: {
-        type: Date,
-    },
-    hash: {
-        type: String,
-        unique: true,
-    }
-})
-
-const Order = mongoose.model('Order', OrderSchema)
-
-const hashFunction = s => {
-    let a = 1, c = 0, h, o;
-    if (s) {
-        a = 0;
-        for (h = s.length - 1; h >= 0; h--) {
-            o = s.charCodeAt(h);
-            a = (a<<6&268435455) + o + (o<<14);
-            c = a & 266338304;
-            a = c!==0?a^c>>21:a;
-        }
-    }
-    return String(a);
-};
-
-app.use(express.json())
 
 app.get("/:order", async (req, res) => {
-    console.log(req.params.order)
     const order = await Order.findOne({hash: req.params.order})
-    res.send(order)
+    if (order) {
+        res.send(`
+            <div>
+                Id пользователя: ${order.userId}<br>
+                Заказ пользователя: ${order.order}<br>
+                Имя пользователя: ${order.username}<br>
+                Время заказа: ${order.date.toTimeString()}
+            </div>`
+        )
+    } else {
+        res.send("Заказ не был найден")
+    }
 })
 
 app.post("/", async (req, res) => {
