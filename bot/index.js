@@ -46,7 +46,7 @@ bot.on("callback_query", (ctx) => {
       order: ctx.update.callback_query.data,
     })
     .then((response) => {
-      bot.telegram.sendMessage(ctx.chat.id, `Ваш заказ: ${ctx.update.callback_query.data}\nНажмите кнопку для получения чека`, {
+      bot.telegram.sendMessage(ctx.chat.id, `Ваш заказ: ${ctx.update.callback_query.data}\nНажмите для получения чека`, {
         reply_markup: {
           inline_keyboard: [
             [

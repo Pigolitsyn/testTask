@@ -21,11 +21,14 @@ app.get("/:orderHash", async (req, res) => {
   const order = await Order.findOne({ hash: req.params.orderHash });
   if (order) {
     res.send(`
-            <div>
+            <div style="margin: 1rem; padding: 1rem; -webkit-box-shadow: 0px 0px 15px -5px rgba(34, 60, 80, 0.57);
+            -moz-box-shadow: 0px 0px 15px -5px rgba(34, 60, 80, 0.57);
+            box-shadow: 0px 0px 15px -5px rgba(34, 60, 80, 0.57); border-radius: 4px; width: 300px">
                 Id пользователя: ${order.userId}<br>
                 Заказ пользователя: ${order.order}<br>
                 Имя пользователя: ${order.username}<br>
                 Время заказа: ${order.date.toTimeString()}<br>
+                -------------------------------------<br><br>
                 Хеш-сумма вашего заказа: ${order.hash}
             </div>`);
   } else {
